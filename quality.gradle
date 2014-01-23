@@ -1,0 +1,27 @@
+apply plugin: 'jacoco'
+apply plugin: 'checkstyle'
+
+task checkstyleReportMain {
+    if (file("$buildDir/reports/checkstyle/main.xml").exists()) {
+        ant.xslt(in: "$buildDir/reports/checkstyle/main.xml",
+                style:"config/checkstyle/checkstyle.xsl",
+                out:"$buildDir/reports/checkstyle/main.html"
+        )
+    }
+}
+
+
+task checkstyleReportTest {
+    if (file("$buildDir/reports/checkstyle/test.xml").exists()) {
+        ant.xslt(in: "$buildDir/reports/checkstyle/test.xml",
+                style:"config/checkstyle/checkstyle.xsl",
+                out:"$buildDir/reports/checkstyle/test.html"
+        )
+    }
+}
+
+test.finalizedBy jacocoTestReport
+checkstyleMain.finalizedBy checkstyleReportMain
+checkstyleTest.finalizedBy checkstyleReportTest
+
+task quality(dependsOn:['checkstyleMain', 'checkstyleTest'])

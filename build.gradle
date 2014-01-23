@@ -1,0 +1,70 @@
+buildscript {
+    repositories {
+        jcenter()
+    }
+    dependencies {
+        classpath "com.jfrog.bintray.gradle:gradle-bintray-plugin:0.3"
+        classpath "com.github.townsfolk:gradle-release:1.2"
+    }
+}
+apply plugin: 'java'
+apply plugin: 'idea'
+apply from: file("quality.gradle")
+apply plugin: 'maven-publish'
+
+sourceCompatibility = 1.6
+group = 'com.github.jaystgelais'
+version = '0.1.0'
+
+repositories {
+    mavenCentral()
+	jcenter()
+}
+
+dependencies {
+	testCompile group: 'junit', name: 'junit', version: '4.10'
+}
+
+idea {
+    project {
+        languageLevel = "1.6"
+    }
+}
+
+task sourcesJar(type: Jar, dependsOn: classes) {
+	from sourceSets.main.allSource
+	classifier "sources"
+	extension "jar"
+}
+
+task javadocJar(type: Jar, dependsOn: javadoc) {
+	from javadoc.destinationDir
+	classifier "javadoc"
+	extension "jar"
+}
+
+publishing {
+	publications {
+		mavenJava(MavenPublication) {
+			from components.java
+			artifact sourcesJar
+			artifact javadocJar
+		}
+	}
+}
+
+apply plugin: 'bintray'
+apply plugin: 'release'
+
+bintray {
+	user = project.hasProperty("bintrayUserName") ? bintrayUserName : null
+	key = project.hasProperty("bintrayApiKey") ? bintrayApiKey : null
+	publications = ["mavenJava"]
+	pkg {
+		repo = 'main'
+		name = 'easy-mail'
+		licenses = ['Apache-2.0']
+	}
+}
+bintrayUpload.dependsOn build, sourcesJar, javadocJar
+createReleaseTag.dependsOn bintrayUpload
