@@ -20,6 +20,13 @@ public final class StyleInlinerTest {
             + "<body><div id=\"thediv\" class=\"divStyle\"></div></body></html>";
 
     @Test
+    public void testStyleBlocksAreRemovedFromOutput() throws Exception {
+        HtmlContentProvider contentProvider = new StaticHtmlContentProvider(TEST_HTML_STYLE_APPLIED_TO_DIV_TAGS);
+        String htmlOutout = StyleInliner.inlineStyle(contentProvider);
+        HtmlAssert.assertTagNotPresent(htmlOutout, "style");
+    }
+
+    @Test
     public void testStylesAppliesToElementByType() throws Exception {
         HtmlContentProvider contentProvider = new StaticHtmlContentProvider(TEST_HTML_STYLE_APPLIED_TO_DIV_TAGS);
         String htmlOutout = StyleInliner.inlineStyle(contentProvider);
