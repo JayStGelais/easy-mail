@@ -1,13 +1,15 @@
 package com.github.jaystgelais.easymail;
 
 /**
- * Created by jgelais on 1/23/14.
+ * Interface that provides access to source HTML content for input into transformation operations.
+ *
+ * @author jaystgelais
  */
 public interface HtmlContentProvider {
     /**
-     * Returns message content as a string of HTML.
+     * Returns HTML content as a string.
      *
-     * @return message content as a string of HTML.
+     * @return HTML content as a string.
      */
     String getHtmlMessageContent();
 }
