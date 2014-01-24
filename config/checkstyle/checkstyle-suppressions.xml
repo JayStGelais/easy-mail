@@ -22,4 +22,7 @@
     <suppress checks="ExecutableStatementCount"    files="[/\\]src[/\\]test[/\\]java[/\\]" />
     <suppress checks="ParameterNumber"             files="[/\\]src[/\\]test[/\\]java[/\\]" />
 
+    <!-- Allow for * inport of Junit assertions -->
+    <suppress checks="AvoidStarImport"             files="[/\\]src[/\\]test[/\\]java[/\\]" />
+
 </suppressions>
