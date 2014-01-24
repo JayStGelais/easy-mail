@@ -6,10 +6,10 @@ import static junit.framework.Assert.assertEquals;
 /**
  * Created by jgelais on 1/23/14.
  */
-public final class StaticHtmlMessageContentProviderTest {
+public final class StaticHtmlContentProviderTest {
     @Test
     public void testStringBasedStaticHtmlMessageContent() {
-        HtmlMessageContentProvider contentProvider = new StaticHtmlMessageContentProvider();
+        HtmlContentProvider contentProvider = new StaticHtmlContentProvider();
         assertEquals("Unexpected content", null, contentProvider.getHtmlMessageContent());
     }
 }

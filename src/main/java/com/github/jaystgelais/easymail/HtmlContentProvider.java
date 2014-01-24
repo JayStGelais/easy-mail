@@ -3,7 +3,7 @@ package com.github.jaystgelais.easymail;
 /**
  * Created by jgelais on 1/23/14.
  */
-public interface HtmlMessageContentProvider {
+public interface HtmlContentProvider {
     /**
      * Returns message content as a string of HTML.
      *
