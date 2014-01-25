@@ -11,6 +11,7 @@ import org.fit.cssbox.io.DefaultDOMSource;
 import org.fit.cssbox.io.DocumentSource;
 import org.fit.cssbox.io.StreamDocumentSource;
 import org.w3c.dom.Document;
+import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
@@ -44,6 +45,7 @@ public final class StyleInliner {
 
             applyEffectiveStylesToStyleAttributes(doc, docSource.getURL());
             removeStyleElements(doc);
+            removeClassAttributes(doc);
 
             return getHtmlAsString(doc);
         } catch (Exception e) {
@@ -56,6 +58,16 @@ public final class StyleInliner {
                     throw new HtmlTransformationException("Error occurred transforming HTML to use inline styles.", e);
                 }
             }
+        }
+    }
+
+    private static void removeClassAttributes(final Node node) {
+        if (node.getAttributes() != null && node.getAttributes().getNamedItem("class") != null) {
+            node.getAttributes().removeNamedItem("class");
+        }
+        NodeList children = node.getChildNodes();
+        for (int x = 0; x < children.getLength(); x++) {
+            removeClassAttributes(children.item(x));
         }
     }
 
