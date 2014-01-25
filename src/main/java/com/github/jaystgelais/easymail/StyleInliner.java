@@ -22,6 +22,8 @@ import javax.xml.transform.stream.StreamResult;
 
 /**
  * Utility class that provides style inlining transformation for HTML documents.
+ *
+ * @author jaystgelais
  */
 public final class StyleInliner {
     private StyleInliner() {

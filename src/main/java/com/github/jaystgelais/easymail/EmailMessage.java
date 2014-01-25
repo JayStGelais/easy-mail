@@ -13,7 +13,10 @@ import java.util.HashSet;
 import java.util.Set;
 
 /**
- * Created by jaystgelais on 1/24/14.
+ * Immutable wrapper around {@link javax.mail.Message} that provides transformation of HTML content for cross
+ * client compatibility.
+ *
+ * @author jaystgelais
  */
 public final class EmailMessage {
     private final Address from;

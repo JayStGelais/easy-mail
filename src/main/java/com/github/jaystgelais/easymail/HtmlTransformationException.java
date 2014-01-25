@@ -1,7 +1,9 @@
 package com.github.jaystgelais.easymail;
 
 /**
- * Created by jgelais on 1/24/14.
+ * Exception encapsulating any errors encountered during HTML transformations.
+ *
+ * @author jaystgelais
  */
 public class HtmlTransformationException extends Exception {
     /**

@@ -1,6 +1,5 @@
 package com.github.jaystgelais.easymail;
 
-import org.junit.Before;
 import org.junit.Test;
 import org.jvnet.mock_javamail.Mailbox;
 
@@ -27,13 +26,9 @@ public final class EmailMessageTest {
     public static final String EMAIL_CC = "keepmeintheloop@fakemail.com";
     public static final String EMAIL_BCC = "ispyyourmail@fakemail.com";
 
-    @Before
-    public void setUp() throws Exception {
-        Mailbox.clearAll();
-    }
-
     @Test
     public void testSendingOfMessage() throws Exception {
+        Mailbox.clearAll();
         EmailMessage message
                 = new EmailMessage.Builder(EMAIL_SENDER, EMAIL_SUBJECT, new StaticHtmlContentProvider(HTML))
                 .addTo(EMAIL_RECIPIENT)
@@ -58,6 +53,7 @@ public final class EmailMessageTest {
         assertEquals(EMAIL_SUBJECT, inbox.get(0).getSubject());
         assertEquals(StyleInliner.inlineStyle(new StaticHtmlContentProvider(HTML)), inbox.get(0).getContent());
     }
+
 
     private Session getMockSession() {
         Properties properties = System.getProperties();
