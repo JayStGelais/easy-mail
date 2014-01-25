@@ -21,7 +21,7 @@ import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.stream.StreamResult;
 
 /**
- * Created by jaystgelais on 1/23/14.
+ * Utility class that provides style inlining transformation for HTML documents.
  */
 public final class StyleInliner {
     private StyleInliner() {
@@ -29,7 +29,7 @@ public final class StyleInliner {
     }
 
     /**
-     * Calculates teh effective styles of each HTML element and produces HTML output stripped of CSS classes and
+     * Calculates the effective styles of each HTML element and produces HTML output stripped of CSS classes and
      * effective style inlined as 'style' attributes.
      *
      * @param contentProvider Input to style inlining transformation.
