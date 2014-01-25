@@ -1,6 +1,7 @@
 package com.github.jaystgelais.easymail;
 
 import java.io.ByteArrayInputStream;
+import java.io.IOException;
 import java.io.StringWriter;
 import java.net.URL;
 
@@ -11,8 +12,10 @@ import org.fit.cssbox.io.DocumentSource;
 import org.fit.cssbox.io.StreamDocumentSource;
 import org.w3c.dom.Document;
 import org.w3c.dom.NodeList;
+import org.xml.sax.SAXException;
 
 import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.stream.StreamResult;
 
@@ -36,25 +39,13 @@ public final class StyleInliner {
     public static String inlineStyle(final HtmlContentProvider contentProvider) throws HtmlTransformationException {
         DocumentSource docSource = null;
         try {
-            //Open the network connection
-            docSource = new StreamDocumentSource(
-                    new ByteArrayInputStream(contentProvider.getHtmlMessageContent().getBytes()), null, "text/html");
+            docSource = newDocumentSource(contentProvider);
+            Document doc = parseHtml(docSource);
 
-            //Parse the input document
-            DOMSource parser = new DefaultDOMSource(docSource);
-            Document doc = parser.parse();
             applyEffectiveStylesToStyleAttributes(doc, docSource.getURL());
-
-
             removeStyleElements(doc);
 
-            javax.xml.transform.dom.DOMSource domSource = new javax.xml.transform.dom.DOMSource(doc);
-            StringWriter writer = new StringWriter();
-            StreamResult result = new StreamResult(writer);
-            TransformerFactory tf = TransformerFactory.newInstance();
-            Transformer transformer = tf.newTransformer();
-            transformer.transform(domSource, result);
-            return writer.toString();
+            return getHtmlAsString(doc);
         } catch (Exception e) {
             throw new HtmlTransformationException("Error occurred transforming HTML to use inline styles.", e);
         } finally {
@@ -66,6 +57,28 @@ public final class StyleInliner {
                 }
             }
         }
+    }
+
+    private static String getHtmlAsString(final Document doc) throws TransformerException {
+        javax.xml.transform.dom.DOMSource domSource = new javax.xml.transform.dom.DOMSource(doc);
+        StringWriter writer = new StringWriter();
+        StreamResult result = new StreamResult(writer);
+        TransformerFactory tf = TransformerFactory.newInstance();
+        Transformer transformer = tf.newTransformer();
+        transformer.transform(domSource, result);
+        return writer.toString();
+    }
+
+    private static StreamDocumentSource newDocumentSource(final HtmlContentProvider contentProvider)
+            throws IOException {
+        return new StreamDocumentSource(new ByteArrayInputStream(contentProvider.getHtmlMessageContent().getBytes()),
+                null, "text/html");
+    }
+
+    private static Document parseHtml(final DocumentSource docSource) throws SAXException, IOException {
+        //Parse the input document
+        DOMSource parser = new DefaultDOMSource(docSource);
+        return parser.parse();
     }
 
     private static void applyEffectiveStylesToStyleAttributes(final Document doc, final URL relativeUrl) {
