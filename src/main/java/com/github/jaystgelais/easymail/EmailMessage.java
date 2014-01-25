@@ -126,13 +126,16 @@ public final class EmailMessage {
          * @param subject Email Subject
          * @param contentProvider content provider supplying untransformed HTML input
          *
-         * @throws AddressException If the from cannot be parsed as a valid email address
          * @throws HtmlTransformationException If an error is encountered transforming Html content for inclusion in
          *                                     this email.
          */
-        public Builder(final String from, final String subject, final HtmlContentProvider contentProvider)
-                throws AddressException, HtmlTransformationException {
-            this.from = new InternetAddress(from);
+        public Builder(final String from, final String subject,
+                       final HtmlContentProvider contentProvider) throws HtmlTransformationException {
+            try {
+                this.from = new InternetAddress(from);
+            } catch (AddressException e) {
+                throw new IllegalArgumentException("Unable to parse [" + from + "] as a valid email address", e);
+            }
             this.subject = subject;
             this.messageBody = StyleInliner.inlineStyle(contentProvider);
             this.to = new HashSet<Address>();

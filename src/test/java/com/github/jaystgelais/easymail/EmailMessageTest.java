@@ -57,6 +57,19 @@ public final class EmailMessageTest {
     }
 
     @Test
+    public void testBuilderConstructorExceptionHandling() throws HtmlTransformationException {
+        boolean hasIllegalArgumentExceptionBeenCaught = false;
+        try {
+            EmailMessage.Builder builder
+                    = new EmailMessage.Builder(MALFORMED_ADDRESS, EMAIL_SUBJECT, new StaticHtmlContentProvider(HTML));
+            fail("Should have thrown IllegalArgumentException on malformed address.");
+        } catch (IllegalArgumentException e) {
+            hasIllegalArgumentExceptionBeenCaught = true;
+        }
+        assertTrue("Never Caught IllegalArgumentException", hasIllegalArgumentExceptionBeenCaught);
+    }
+
+    @Test
     public void testBuilderAddToExceptionHandling() {
         EmailMessage.Builder builder;
         try {
