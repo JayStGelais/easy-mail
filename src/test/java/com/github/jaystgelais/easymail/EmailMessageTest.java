@@ -11,6 +11,7 @@ import java.util.Properties;
 
 import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertTrue;
+import static junit.framework.Assert.fail;
 
 /**
  * Created by jaystgelais on 1/25/14.
@@ -25,6 +26,7 @@ public final class EmailMessageTest {
     public static final String EMAIL_RECIPIENT = "recipient@fakemail.com";
     public static final String EMAIL_CC = "keepmeintheloop@fakemail.com";
     public static final String EMAIL_BCC = "ispyyourmail@fakemail.com";
+    public static final String MALFORMED_ADDRESS = "malformedaddress<";
 
     @Test
     public void testSendingOfMessage() throws Exception {
@@ -52,6 +54,70 @@ public final class EmailMessageTest {
         assertEquals(new InternetAddress(EMAIL_BCC), inbox.get(0).getRecipients(Message.RecipientType.BCC)[0]);
         assertEquals(EMAIL_SUBJECT, inbox.get(0).getSubject());
         assertEquals(StyleInliner.inlineStyle(new StaticHtmlContentProvider(HTML)), inbox.get(0).getContent());
+    }
+
+    @Test
+    public void testBuilderAddToExceptionHandling() {
+        EmailMessage.Builder builder;
+        try {
+            builder = new EmailMessage.Builder(EMAIL_SENDER, EMAIL_SUBJECT, new StaticHtmlContentProvider(HTML));
+        } catch (Exception e) {
+            fail("Exception Occured in construction.");
+            return;
+        }
+
+        boolean hasIllegalArgumentExceptionBeenCaught = false;
+        try {
+            builder.addTo(MALFORMED_ADDRESS);
+            fail("Should have thrown IllegalArgumentException on malformed address.");
+        } catch (IllegalArgumentException e) {
+            hasIllegalArgumentExceptionBeenCaught = true;
+        }
+        assertTrue("Never Caught IllegalArgumentException", hasIllegalArgumentExceptionBeenCaught);
+    }
+
+
+
+    @Test
+    public void testBuilderAddCCExceptionHandling() {
+        EmailMessage.Builder builder;
+        try {
+            builder = new EmailMessage.Builder(EMAIL_SENDER, EMAIL_SUBJECT, new StaticHtmlContentProvider(HTML));
+        } catch (Exception e) {
+            fail("Exception Occured in construction.");
+            return;
+        }
+
+        boolean hasIllegalArgumentExceptionBeenCaught = false;
+        try {
+            builder.addCC(MALFORMED_ADDRESS);
+            fail("Should have thrown IllegalArgumentException on malformed address.");
+        } catch (IllegalArgumentException e) {
+            hasIllegalArgumentExceptionBeenCaught = true;
+        }
+        assertTrue("Never Caught IllegalArgumentException", hasIllegalArgumentExceptionBeenCaught);
+    }
+
+
+
+    @Test
+    public void testBuilderAddBCCExceptionHandling() {
+        EmailMessage.Builder builder;
+        try {
+            builder = new EmailMessage.Builder(EMAIL_SENDER, EMAIL_SUBJECT, new StaticHtmlContentProvider(HTML));
+        } catch (Exception e) {
+            fail("Exception Occured in construction.");
+            return;
+        }
+
+        boolean hasIllegalArgumentExceptionBeenCaught = false;
+        try {
+            builder.addBCC(MALFORMED_ADDRESS);
+            fail("Should have thrown IllegalArgumentException on malformed address.");
+        } catch (IllegalArgumentException e) {
+            hasIllegalArgumentExceptionBeenCaught = true;
+        }
+        assertTrue("Never Caught IllegalArgumentException", hasIllegalArgumentExceptionBeenCaught);
     }
 
 

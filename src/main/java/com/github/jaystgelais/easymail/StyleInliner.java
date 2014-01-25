@@ -26,9 +26,7 @@ import javax.xml.transform.stream.StreamResult;
  * @author jaystgelais
  */
 public final class StyleInliner {
-    private StyleInliner() {
-
-    }
+    private StyleInliner() { }
 
     /**
      * Calculates the effective styles of each HTML element and produces HTML output stripped of CSS classes and
@@ -90,13 +88,11 @@ public final class StyleInliner {
     }
 
     private static Document parseHtml(final DocumentSource docSource) throws SAXException, IOException {
-        //Parse the input document
         DOMSource parser = new DefaultDOMSource(docSource);
         return parser.parse();
     }
 
     private static void applyEffectiveStylesToStyleAttributes(final Document doc, final URL relativeUrl) {
-        //Create the CSS analyzer
         DOMAnalyzer da = new DOMAnalyzer(doc, relativeUrl);
         da.attributesToStyles(); //convert the HTML presentation attributes to inline styles
         da.getStyleSheets(); //load the author style sheets

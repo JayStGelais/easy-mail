@@ -9,7 +9,7 @@ import java.io.InputStreamReader;
 import java.nio.charset.Charset;
 
 /**
- * Simple HtmlContentProvider implementation that will provide static HTML supplied from a String, Input Stream or File.
+ * Simple HtmlContentProvider implementation that will provide static HTML supplied from a String or Input Stream.
  *
  * @author jaystgelais
  */

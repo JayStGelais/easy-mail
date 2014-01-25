@@ -2,6 +2,9 @@ package com.github.jaystgelais.easymail;
 
 import org.junit.Test;
 
+import static junit.framework.Assert.assertTrue;
+import static junit.framework.Assert.fail;
+
 /**
  * Created by jaystgelais on 1/24/14.
  */
@@ -58,5 +61,24 @@ public final class StyleInlinerTest {
         String htmlOutout = StyleInliner.inlineStyle(contentProvider);
         HtmlAssert.assertElementHasStyle(htmlOutout, "thediv", "font-weight: normal;");
         HtmlAssert.assertElementDoesNotHaveStyle(htmlOutout, "thediv", "font-weight: bold;");
+    }
+
+    @Test
+    public void testExceptionHandling() {
+        boolean hasHtmlTransformationExceptionBeenCaught = false;
+        try {
+            StyleInliner.inlineStyle(new HtmlContentProvider() {
+                @Override
+                public String getHtmlMessageContent() {
+                    throw new RuntimeException();
+                }
+            });
+            fail("Should have thrown an excpetion");
+        } catch (HtmlTransformationException e) {
+            hasHtmlTransformationExceptionBeenCaught = true;
+        } catch (Exception e) {
+            fail("Caught the Wrong Exception:" + e.getClass().toString());
+        }
+        assertTrue("Failed to catch HtmlTransformationException.", hasHtmlTransformationExceptionBeenCaught);
     }
 }
