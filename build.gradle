@@ -14,7 +14,6 @@ apply plugin: 'maven-publish'
 
 sourceCompatibility = 1.6
 group = 'com.github.jaystgelais'
-version = '0.1.0'
 
 repositories {
     mavenCentral()
