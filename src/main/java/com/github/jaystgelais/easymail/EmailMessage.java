@@ -128,6 +128,8 @@ public final class EmailMessage {
          *
          * @throws HtmlTransformationException If an error is encountered transforming Html content for inclusion in
          *                                     this email.
+         * @throws IllegalArgumentException If the email address supplied for {@code from} is not a valid
+         *                                            email address.
          */
         public Builder(final String from, final String subject,
                        final HtmlContentProvider contentProvider) throws HtmlTransformationException {
@@ -148,9 +150,9 @@ public final class EmailMessage {
          *
          * @param address Email address to add to list of primary (to:) recipients.
          * @return This Builder
-         * @throws IllegalArgumentException if address cannot be parsed into a valid email address.
+         * @throws IllegalArgumentException If address cannot be parsed into a valid email address.
          */
-        public Builder addTo(final String address) throws IllegalArgumentException {
+        public Builder addTo(final String address) {
             try {
                 to.add(new InternetAddress(address));
             } catch (AddressException e) {
@@ -164,9 +166,9 @@ public final class EmailMessage {
          *
          * @param address Email address to add to list of carbon copy (cc:) recipients.
          * @return This Builder
-         * @throws IllegalArgumentException if address cannot be parsed into a valid email address.
+         * @throws IllegalArgumentException If address cannot be parsed into a valid email address.
          */
-        public Builder addCC(final String address) throws IllegalArgumentException {
+        public Builder addCC(final String address)  {
             try {
                 cc.add(new InternetAddress(address));
             } catch (AddressException e) {
@@ -180,9 +182,9 @@ public final class EmailMessage {
          *
          * @param address Email address to add to list of blind carbon copy (bcc:) recipients.
          * @return This Builder
-         * @throws IllegalArgumentException if address cannot be parsed into a valid email address.
+         * @throws IllegalArgumentException If address cannot be parsed into a valid email address.
          */
-        public Builder addBCC(final String address) throws IllegalArgumentException {
+        public Builder addBCC(final String address) {
             try {
                 bcc.add(new InternetAddress(address));
             } catch (AddressException e) {
