@@ -57,6 +57,26 @@ public final class EmailMessageTest {
     }
 
     @Test
+    public void testBuilder() throws Exception {
+        EmailMessage message
+                = new EmailMessage.Builder(EMAIL_SENDER, EMAIL_SUBJECT, new StaticHtmlContentProvider(HTML))
+                .addTo(EMAIL_RECIPIENT)
+                .addCC(EMAIL_CC)
+                .addBCC(EMAIL_BCC)
+                .build();
+        assertEquals("FROM was not equal.", new InternetAddress(EMAIL_SENDER), message.getFrom());
+        assertTrue("Unexpected count of TO addresses: " + message.getTo().size(), message.getTo().size() == 1);
+        assertEquals("TO was not equal.", new InternetAddress(EMAIL_RECIPIENT), message.getTo().iterator().next());
+        assertTrue("Unexpected count of CC addresses: " + message.getCc().size(), message.getCc().size() == 1);
+        assertEquals("CC was not equal.", new InternetAddress(EMAIL_CC), message.getCc().iterator().next());
+        assertTrue("Unexpected count of BCC addresses: " + message.getBcc().size(), message.getBcc().size() == 1);
+        assertEquals("BCC was not equal.", new InternetAddress(EMAIL_BCC), message.getBcc().iterator().next());
+        assertEquals("Subject was not equal.", EMAIL_SUBJECT, message.getSubject());
+        assertEquals("Message content was not equal.", StyleInliner.inlineStyle(new StaticHtmlContentProvider(HTML)),
+                                                       message.getMessageBody());
+    }
+
+    @Test
     public void testBuilderConstructorExceptionHandling() throws HtmlTransformationException {
         boolean hasIllegalArgumentExceptionBeenCaught = false;
         try {
@@ -131,6 +151,18 @@ public final class EmailMessageTest {
             hasIllegalArgumentExceptionBeenCaught = true;
         }
         assertTrue("Never Caught IllegalArgumentException", hasIllegalArgumentExceptionBeenCaught);
+    }
+
+    @Test
+    public void testBuilderInvalidSetup() throws Exception {
+        boolean hasIllegalStateExceptionBeenCaught = false;
+        try {
+            new EmailMessage.Builder(EMAIL_SENDER, EMAIL_SUBJECT, new StaticHtmlContentProvider(HTML)).build();
+            fail("Should have thrown IllegalStateException on missing Recipients.");
+        } catch (IllegalStateException e) {
+            hasIllegalStateExceptionBeenCaught = true;
+        }
+        assertTrue("Never Caught IllegalArgumentException", hasIllegalStateExceptionBeenCaught);
     }
 
 
