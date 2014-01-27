@@ -1,11 +1,13 @@
 package com.github.jaystgelais.easymail;
 
+import com.google.common.base.Charsets;
 import org.junit.Test;
 import org.jvnet.mock_javamail.Mailbox;
 
 import javax.mail.Message;
 import javax.mail.Session;
 import javax.mail.internet.InternetAddress;
+import java.io.ByteArrayInputStream;
 import java.util.List;
 import java.util.Properties;
 
@@ -74,6 +76,27 @@ public final class EmailMessageTest {
         assertEquals("Subject was not equal.", EMAIL_SUBJECT, message.getSubject());
         assertEquals("Message content was not equal.", StyleInliner.inlineStyle(new StaticHtmlContentProvider(HTML)),
                                                        message.getMessageBody());
+    }
+
+    @Test
+    public void testBuilderWithStringHTMLConstructor() throws Exception {
+        EmailMessage message
+                = new EmailMessage.Builder(EMAIL_SENDER, EMAIL_SUBJECT, HTML)
+                .addTo(EMAIL_RECIPIENT)
+                .build();
+        assertEquals("Message content was not equal.", StyleInliner.inlineStyle(new StaticHtmlContentProvider(HTML)),
+                message.getMessageBody());
+    }
+
+    @Test
+    public void testBuilderWithInputStreamForHTMLConstructor() throws Exception {
+        EmailMessage message
+                = new EmailMessage.Builder(EMAIL_SENDER, EMAIL_SUBJECT,
+                new ByteArrayInputStream(HTML.getBytes(Charsets.UTF_8)))
+                .addTo(EMAIL_RECIPIENT)
+                .build();
+        assertEquals("Message content was not equal.", StyleInliner.inlineStyle(new StaticHtmlContentProvider(HTML)),
+                message.getMessageBody());
     }
 
     @Test
