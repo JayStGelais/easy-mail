@@ -25,8 +25,8 @@ import javax.xml.transform.stream.StreamResult;
  *
  * @author jaystgelais
  */
-public final class StyleInliner {
-    private StyleInliner() { }
+public final class HtmlProcessor {
+    private HtmlProcessor() { }
 
     /**
      * Calculates the effective styles of each HTML element and produces HTML output stripped of CSS classes and
@@ -37,7 +37,7 @@ public final class StyleInliner {
      * @throws HtmlTransformationException If any errors occur preventing the transformation of the inputted HTML
      *                                     document.
      */
-    public static String inlineStyle(final HtmlContentProvider contentProvider) throws HtmlTransformationException {
+    public static String process(final HtmlContentProvider contentProvider) throws HtmlTransformationException {
         DocumentSource docSource = null;
         try {
             docSource = newDocumentSource(contentProvider);

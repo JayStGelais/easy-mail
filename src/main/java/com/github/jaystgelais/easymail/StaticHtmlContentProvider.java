@@ -3,6 +3,7 @@ package com.github.jaystgelais.easymail;
 import com.google.common.base.Charsets;
 import com.google.common.io.CharStreams;
 
+import javax.activation.DataSource;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -55,5 +56,11 @@ public final class StaticHtmlContentProvider implements HtmlContentProvider {
     @Override
     public String getHtmlMessageContent() {
         return htmlContent;
+    }
+
+    @Override
+    public DataSource getImageDataSource(final String relativeUrl) {
+        throw new UnsupportedOperationException("StaticHtmlContentProvider does not support embedding images "
+                + "from relative URLs. All images myst be fully qualified URLs.");
     }
 }

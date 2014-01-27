@@ -2,13 +2,15 @@ package com.github.jaystgelais.easymail;
 
 import org.junit.Test;
 
+import javax.activation.DataSource;
+
 import static junit.framework.Assert.assertTrue;
 import static junit.framework.Assert.fail;
 
 /**
  * Created by jaystgelais on 1/24/14.
  */
-public final class StyleInlinerTest {
+public final class HtmlProcessorTest {
     private static final String TEST_HTML_STYLE_APPLIED_TO_DIV_TAGS
             = "<html><head><title>Sample Input</title><style>div {font-weight: bold;}</style></head>"
             + "<body><div id=\"thediv\"></div></body></html>";
@@ -30,35 +32,35 @@ public final class StyleInlinerTest {
     @Test
     public void testStyleBlocksAreRemovedFromOutput() throws Exception {
         HtmlContentProvider contentProvider = new StaticHtmlContentProvider(TEST_HTML_STYLE_APPLIED_TO_DIV_TAGS);
-        String htmlOutout = StyleInliner.inlineStyle(contentProvider);
+        String htmlOutout = HtmlProcessor.process(contentProvider);
         HtmlAssert.assertTagNotPresent(htmlOutout, "style");
     }
 
     @Test
     public void testStylesAppliesToElementByType() throws Exception {
         HtmlContentProvider contentProvider = new StaticHtmlContentProvider(TEST_HTML_STYLE_APPLIED_TO_DIV_TAGS);
-        String htmlOutout = StyleInliner.inlineStyle(contentProvider);
+        String htmlOutout = HtmlProcessor.process(contentProvider);
         HtmlAssert.assertElementHasStyle(htmlOutout, "thediv", "font-weight: bold;");
     }
 
     @Test
     public void testStylesAppliesToElementById() throws Exception {
         HtmlContentProvider contentProvider = new StaticHtmlContentProvider(TEST_HTML_STYLE_APPLIED_TO_ID);
-        String htmlOutout = StyleInliner.inlineStyle(contentProvider);
+        String htmlOutout = HtmlProcessor.process(contentProvider);
         HtmlAssert.assertElementHasStyle(htmlOutout, "thediv", "font-weight: bold;");
     }
 
     @Test
     public void testStylesAppliesToElementByClass() throws Exception {
         HtmlContentProvider contentProvider = new StaticHtmlContentProvider(TEST_HTML_STYLE_APPLIED_TO_CLASS);
-        String htmlOutout = StyleInliner.inlineStyle(contentProvider);
+        String htmlOutout = HtmlProcessor.process(contentProvider);
         HtmlAssert.assertElementHasStyle(htmlOutout, "thediv", "font-weight: bold;");
     }
 
     @Test
     public void testStylesConflictHandledCorrectly() throws Exception {
         HtmlContentProvider contentProvider = new StaticHtmlContentProvider(TEST_HTML_STYLE_CONFLICT);
-        String htmlOutout = StyleInliner.inlineStyle(contentProvider);
+        String htmlOutout = HtmlProcessor.process(contentProvider);
         HtmlAssert.assertElementHasStyle(htmlOutout, "thediv", "font-weight: normal;");
         HtmlAssert.assertElementDoesNotHaveStyle(htmlOutout, "thediv", "font-weight: bold;");
     }
@@ -67,10 +69,15 @@ public final class StyleInlinerTest {
     public void testExceptionHandling() {
         boolean hasHtmlTransformationExceptionBeenCaught = false;
         try {
-            StyleInliner.inlineStyle(new HtmlContentProvider() {
+            HtmlProcessor.process(new HtmlContentProvider() {
                 @Override
                 public String getHtmlMessageContent() {
                     throw new RuntimeException();
+                }
+
+                @Override
+                public DataSource getImageDataSource(final String relativeUrl) {
+                    return null;
                 }
             });
             fail("Should have thrown an excpetion");
