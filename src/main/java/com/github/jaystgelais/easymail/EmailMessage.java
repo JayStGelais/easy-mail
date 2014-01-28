@@ -141,7 +141,7 @@ public final class EmailMessage {
                 throw new IllegalArgumentException("Unable to parse [" + from + "] as a valid email address", e);
             }
             this.subject = subject;
-            this.messageBody = HtmlProcessor.process(contentProvider);
+            this.messageBody = HtmlProcessor.process(contentProvider).getHtmlMessage();
             this.to = new HashSet<Address>();
             this.cc = new HashSet<Address>();
             this.bcc = new HashSet<Address>();

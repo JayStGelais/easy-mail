@@ -1,5 +1,6 @@
 package com.github.jaystgelais.easymail;
 
+import java.net.MalformedURLException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -11,6 +12,16 @@ public final class EmailMessageContent {
 
     private String html;
     private Map<String, EmbeddedImageReference> imageMap = new HashMap<String, EmbeddedImageReference>();
+    private final HtmlContentProvider contentProvider;
+
+    /**
+     * Constructs a new EmailMessageContent.
+     *
+     * @param contentProvider Content Provided to use to retrieve embedded images.
+     */
+    public EmailMessageContent(final HtmlContentProvider contentProvider) {
+        this.contentProvider = contentProvider;
+    }
 
     /**
      * Returns the HTML message as a String.
@@ -19,6 +30,15 @@ public final class EmailMessageContent {
      */
     public String getHtmlMessage() {
         return html;
+    }
+
+    /**
+     * Sets the HTML Message.
+     *
+     * @param html The HTML Message.
+     */
+    public void setHtmlMessage(final String html) {
+        this.html = html;
     }
 
     /**
@@ -31,27 +51,25 @@ public final class EmailMessageContent {
     }
 
     /**
-     * Adds an image to this message content. Returns {@code true} if this image has not yet been added. (Returns
-     * {@code false} if this image has already been embedded in this message content.)
+     * Adds an image to this message content. Returns the EmbeddedImageReference generated to represent this image.
      *
-     * @param contentProvider Content provider that knows how to generate image data form the specified relative URL.
      * @param relativeUrl Relative URL pointing to this image.
-     * @return {@code true} if this image has not yet been added. (Returns  {@code false} if this image has already
-     *         been embedded in this message content.)
+     * @return EmbeddedImageReference generated to represent this image.
+     * @throws MalformedURLException if the relative URL cannot be converted into a full URL to locate the resource.
      */
-    public boolean addEmbeddedImage(final HtmlContentProvider contentProvider, final String relativeUrl) {
+    public EmbeddedImageReference addEmbeddedImage(final String relativeUrl) throws MalformedURLException {
         if (imageMap.keySet().contains(relativeUrl)) {
-            return false;
+            return imageMap.get(relativeUrl);
         }
 
-        imageMap.put(relativeUrl, new EmbeddedImageReference(getNextContentId(),
-                contentProvider.getImageDataSource(relativeUrl)));
-        return true;
+        EmbeddedImageReference embeddedImageReference = new EmbeddedImageReference(getNextContentId(),
+                contentProvider.getImageDataSource(relativeUrl));
+        imageMap.put(relativeUrl, embeddedImageReference);
+        return embeddedImageReference;
     }
 
 
     private String getNextContentId() {
         return "img-" + (imageMap.size() + 1);
     }
-
 }

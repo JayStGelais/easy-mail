@@ -3,6 +3,7 @@ package com.github.jaystgelais.easymail;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.StringWriter;
+import java.net.MalformedURLException;
 import java.net.URL;
 
 import org.fit.cssbox.css.DOMAnalyzer;
@@ -29,16 +30,26 @@ public final class HtmlProcessor {
     private HtmlProcessor() { }
 
     /**
-     * Calculates the effective styles of each HTML element and produces HTML output stripped of CSS classes and
-     * effective style inlined as 'style' attributes.
+     * Produces EmailMessage content based on a number of transformation on teh supplied HtmlContentProvider to
+     * increase it's cross client rendering compatibility.
      *
-     * @param contentProvider Input to style inlining transformation.
-     * @return HTML as String as product of style inlining transformation.
+     * Transformations include:
+     * <ol>
+     *     <li>Calculate effective styles of all elements ad write them to their style attribute.</li>
+     *     <li>Remove style declarations form head of document.</li>
+     *     <li>Remove class attributes form all elements.</li>
+     *     <li>Configure Embedded image references for all images pointing to relative URLs.</li>
+     * </ol>
+     *
+     * @param contentProvider Input to sHTML processing transformations.
+     * @return MessageContent containing processed HTML and embedded images.
      * @throws HtmlTransformationException If any errors occur preventing the transformation of the inputted HTML
      *                                     document.
      */
-    public static String process(final HtmlContentProvider contentProvider) throws HtmlTransformationException {
+    public static EmailMessageContent process(final HtmlContentProvider contentProvider)
+            throws HtmlTransformationException {
         DocumentSource docSource = null;
+        EmailMessageContent emailMessageContent = new EmailMessageContent(contentProvider);
         try {
             docSource = newDocumentSource(contentProvider);
             Document doc = parseHtml(docSource);
@@ -46,8 +57,10 @@ public final class HtmlProcessor {
             applyEffectiveStylesToStyleAttributes(doc, docSource.getURL());
             removeStyleElements(doc);
             removeClassAttributes(doc);
+            configureEmbeddedImages(doc, emailMessageContent);
 
-            return getHtmlAsString(doc);
+            emailMessageContent.setHtmlMessage(getHtmlAsString(doc));
+            return emailMessageContent;
         } catch (Exception e) {
             throw new HtmlTransformationException("Error occurred transforming HTML to use inline styles.", e);
         } finally {
@@ -59,6 +72,36 @@ public final class HtmlProcessor {
                 }
             }
         }
+    }
+
+    private static void configureEmbeddedImages(final Document doc, final EmailMessageContent emailMessageContent)
+            throws MalformedURLException {
+        NodeList imgNodes = doc.getElementsByTagName("img");
+        for (int x = 0; x < imgNodes.getLength(); x++) {
+            Node imgNode = imgNodes.item(x);
+            String href = getAttributeValue(imgNode, "href");
+            if (isRelativeUrl(href)) {
+                setAttributeValue(imgNode, "href", "cid:" + emailMessageContent.addEmbeddedImage(href).getContentId());
+            }
+        }
+    }
+
+    private static void setAttributeValue(final Node node, final String attributeName, final String value) {
+        if (node.getAttributes() != null && node.getAttributes().getNamedItem(attributeName) != null) {
+            node.getAttributes().getNamedItem(attributeName).setTextContent(value);
+        }
+    }
+
+    private static String getAttributeValue(final Node node, final String attributeName) {
+        if (node.getAttributes() == null || node.getAttributes().getNamedItem(attributeName) == null) {
+            return null;
+        }
+
+        return node.getAttributes().getNamedItem(attributeName).getTextContent();
+    }
+
+    private static boolean isRelativeUrl(final String href) {
+        return !href.toLowerCase().startsWith("http://");
     }
 
     private static void removeClassAttributes(final Node node) {

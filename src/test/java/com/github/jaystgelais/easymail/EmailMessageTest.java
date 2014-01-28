@@ -55,7 +55,8 @@ public final class EmailMessageTest {
                 inbox.get(0).getRecipients(Message.RecipientType.BCC).length == 1);
         assertEquals(new InternetAddress(EMAIL_BCC), inbox.get(0).getRecipients(Message.RecipientType.BCC)[0]);
         assertEquals(EMAIL_SUBJECT, inbox.get(0).getSubject());
-        assertEquals(HtmlProcessor.process(new StaticHtmlContentProvider(HTML)), inbox.get(0).getContent());
+        assertEquals(HtmlProcessor.process(new StaticHtmlContentProvider(HTML)).getHtmlMessage(),
+                inbox.get(0).getContent());
     }
 
     @Test
@@ -74,8 +75,8 @@ public final class EmailMessageTest {
         assertTrue("Unexpected count of BCC addresses: " + message.getBcc().size(), message.getBcc().size() == 1);
         assertEquals("BCC was not equal.", new InternetAddress(EMAIL_BCC), message.getBcc().iterator().next());
         assertEquals("Subject was not equal.", EMAIL_SUBJECT, message.getSubject());
-        assertEquals("Message content was not equal.", HtmlProcessor.process(new StaticHtmlContentProvider(HTML)),
-                                                       message.getMessageBody());
+        assertEquals("Message content was not equal.",
+                HtmlProcessor.process(new StaticHtmlContentProvider(HTML)).getHtmlMessage(), message.getMessageBody());
     }
 
     @Test
@@ -84,8 +85,8 @@ public final class EmailMessageTest {
                 = new EmailMessage.Builder(EMAIL_SENDER, EMAIL_SUBJECT, HTML)
                 .addTo(EMAIL_RECIPIENT)
                 .build();
-        assertEquals("Message content was not equal.", HtmlProcessor.process(new StaticHtmlContentProvider(HTML)),
-                message.getMessageBody());
+        assertEquals("Message content was not equal.",
+                HtmlProcessor.process(new StaticHtmlContentProvider(HTML)).getHtmlMessage(), message.getMessageBody());
     }
 
     @Test
@@ -95,8 +96,8 @@ public final class EmailMessageTest {
                 new ByteArrayInputStream(HTML.getBytes(Charsets.UTF_8)))
                 .addTo(EMAIL_RECIPIENT)
                 .build();
-        assertEquals("Message content was not equal.", HtmlProcessor.process(new StaticHtmlContentProvider(HTML)),
-                message.getMessageBody());
+        assertEquals("Message content was not equal.",
+                HtmlProcessor.process(new StaticHtmlContentProvider(HTML)).getHtmlMessage(), message.getMessageBody());
     }
 
     @Test

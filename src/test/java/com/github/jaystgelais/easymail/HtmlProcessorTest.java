@@ -32,35 +32,35 @@ public final class HtmlProcessorTest {
     @Test
     public void testStyleBlocksAreRemovedFromOutput() throws Exception {
         HtmlContentProvider contentProvider = new StaticHtmlContentProvider(TEST_HTML_STYLE_APPLIED_TO_DIV_TAGS);
-        String htmlOutout = HtmlProcessor.process(contentProvider);
+        String htmlOutout = HtmlProcessor.process(contentProvider).getHtmlMessage();
         HtmlAssert.assertTagNotPresent(htmlOutout, "style");
     }
 
     @Test
     public void testStylesAppliesToElementByType() throws Exception {
         HtmlContentProvider contentProvider = new StaticHtmlContentProvider(TEST_HTML_STYLE_APPLIED_TO_DIV_TAGS);
-        String htmlOutout = HtmlProcessor.process(contentProvider);
+        String htmlOutout = HtmlProcessor.process(contentProvider).getHtmlMessage();
         HtmlAssert.assertElementHasStyle(htmlOutout, "thediv", "font-weight: bold;");
     }
 
     @Test
     public void testStylesAppliesToElementById() throws Exception {
         HtmlContentProvider contentProvider = new StaticHtmlContentProvider(TEST_HTML_STYLE_APPLIED_TO_ID);
-        String htmlOutout = HtmlProcessor.process(contentProvider);
+        String htmlOutout = HtmlProcessor.process(contentProvider).getHtmlMessage();
         HtmlAssert.assertElementHasStyle(htmlOutout, "thediv", "font-weight: bold;");
     }
 
     @Test
     public void testStylesAppliesToElementByClass() throws Exception {
         HtmlContentProvider contentProvider = new StaticHtmlContentProvider(TEST_HTML_STYLE_APPLIED_TO_CLASS);
-        String htmlOutout = HtmlProcessor.process(contentProvider);
+        String htmlOutout = HtmlProcessor.process(contentProvider).getHtmlMessage();
         HtmlAssert.assertElementHasStyle(htmlOutout, "thediv", "font-weight: bold;");
     }
 
     @Test
     public void testStylesConflictHandledCorrectly() throws Exception {
         HtmlContentProvider contentProvider = new StaticHtmlContentProvider(TEST_HTML_STYLE_CONFLICT);
-        String htmlOutout = HtmlProcessor.process(contentProvider);
+        String htmlOutout = HtmlProcessor.process(contentProvider).getHtmlMessage();
         HtmlAssert.assertElementHasStyle(htmlOutout, "thediv", "font-weight: normal;");
         HtmlAssert.assertElementDoesNotHaveStyle(htmlOutout, "thediv", "font-weight: bold;");
     }
