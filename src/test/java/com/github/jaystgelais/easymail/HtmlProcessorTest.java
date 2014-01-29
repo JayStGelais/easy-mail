@@ -4,6 +4,7 @@ import org.junit.Test;
 
 import javax.activation.DataSource;
 
+import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertTrue;
 import static junit.framework.Assert.fail;
 
@@ -63,6 +64,14 @@ public final class HtmlProcessorTest {
         String htmlOutout = HtmlProcessor.process(contentProvider).getHtmlMessage();
         HtmlAssert.assertElementHasStyle(htmlOutout, "thediv", "font-weight: normal;");
         HtmlAssert.assertElementDoesNotHaveStyle(htmlOutout, "thediv", "font-weight: bold;");
+    }
+
+    @Test
+    public void testEmbeddingOfImage() throws Exception {
+        HtmlContentProvider contentProvider
+                = new URLHtmlContentProvider(getClass().getResource("./EmbeddedImageTest.html"));
+        EmailMessageContent messageContent = HtmlProcessor.process(contentProvider);
+        assertEquals(1, messageContent.getEmbeddedImages().size());
     }
 
     @Test

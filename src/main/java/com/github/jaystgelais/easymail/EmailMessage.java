@@ -1,15 +1,21 @@
 package com.github.jaystgelais.easymail;
 
+import javax.activation.DataHandler;
 import javax.mail.Address;
+import javax.mail.BodyPart;
 import javax.mail.Message;
 import javax.mail.MessagingException;
+import javax.mail.Multipart;
 import javax.mail.Session;
 import javax.mail.Transport;
 import javax.mail.internet.AddressException;
 import javax.mail.internet.InternetAddress;
+import javax.mail.internet.MimeBodyPart;
 import javax.mail.internet.MimeMessage;
+import javax.mail.internet.MimeMultipart;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
@@ -28,14 +34,16 @@ public final class EmailMessage {
 
     private final String subject;
     private final String messageBody;
+    private final Collection<EmbeddedImageReference> imageDataSources;
 
     private EmailMessage(final Builder builder) {
         from = builder.from;
         subject = builder.subject;
-        messageBody = builder.messageBody;
+        messageBody = builder.messageBody.getHtmlMessage();
         to = Collections.unmodifiableSet(builder.to);
         cc = Collections.unmodifiableSet(builder.cc);
         bcc = Collections.unmodifiableSet(builder.bcc);
+        imageDataSources = Collections.unmodifiableCollection(builder.messageBody.getEmbeddedImages());
     }
 
     /**
@@ -105,7 +113,24 @@ public final class EmailMessage {
         message.setRecipients(Message.RecipientType.CC, cc.toArray(new Address[0]));
         message.setRecipients(Message.RecipientType.BCC, bcc.toArray(new Address[0]));
         message.setSubject(subject);
-        message.setContent(messageBody, "text/html");
+        if (imageDataSources.isEmpty()) {
+            message.setContent(messageBody, "text/html");
+        } else {
+            Multipart multipart = new MimeMultipart("related");
+
+            BodyPart htmlPart = new MimeBodyPart();
+            htmlPart.setContent(messageBody, "text/html");
+            multipart.addBodyPart(htmlPart);
+
+            for (EmbeddedImageReference imageReference : imageDataSources) {
+                BodyPart imgPart = new MimeBodyPart();
+                imgPart.setDataHandler(new DataHandler(imageReference.getImageDataSource()));
+                imgPart.setHeader("Content-ID", imageReference.getContentId());
+                multipart.addBodyPart(imgPart);
+            }
+
+            message.setContent(multipart);
+        }
 
         Transport.send(message);
     }
@@ -119,7 +144,7 @@ public final class EmailMessage {
         private final Set<Address> cc;
         private final Set<Address> bcc;
         private final String subject;
-        private final String messageBody;
+        private final EmailMessageContent messageBody;
 
         /**
          * Creates a new EmailMessage Builder.
@@ -141,7 +166,7 @@ public final class EmailMessage {
                 throw new IllegalArgumentException("Unable to parse [" + from + "] as a valid email address", e);
             }
             this.subject = subject;
-            this.messageBody = HtmlProcessor.process(contentProvider).getHtmlMessage();
+            this.messageBody = HtmlProcessor.process(contentProvider);
             this.to = new HashSet<Address>();
             this.cc = new HashSet<Address>();
             this.bcc = new HashSet<Address>();

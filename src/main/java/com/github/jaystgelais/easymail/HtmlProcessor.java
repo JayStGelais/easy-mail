@@ -79,9 +79,9 @@ public final class HtmlProcessor {
         NodeList imgNodes = doc.getElementsByTagName("img");
         for (int x = 0; x < imgNodes.getLength(); x++) {
             Node imgNode = imgNodes.item(x);
-            String href = getAttributeValue(imgNode, "href");
-            if (isRelativeUrl(href)) {
-                setAttributeValue(imgNode, "href", "cid:" + emailMessageContent.addEmbeddedImage(href).getContentId());
+            String url = getAttributeValue(imgNode, "src");
+            if (isRelativeUrl(url)) {
+                setAttributeValue(imgNode, "src", "cid:" + emailMessageContent.addEmbeddedImage(url).getContentId());
             }
         }
     }
@@ -100,8 +100,8 @@ public final class HtmlProcessor {
         return node.getAttributes().getNamedItem(attributeName).getTextContent();
     }
 
-    private static boolean isRelativeUrl(final String href) {
-        return !href.toLowerCase().startsWith("http://");
+    private static boolean isRelativeUrl(final String url) {
+        return !url.toLowerCase().startsWith("http://");
     }
 
     private static void removeClassAttributes(final Node node) {

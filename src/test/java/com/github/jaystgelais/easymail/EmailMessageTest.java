@@ -5,6 +5,7 @@ import org.junit.Test;
 import org.jvnet.mock_javamail.Mailbox;
 
 import javax.mail.Message;
+import javax.mail.Multipart;
 import javax.mail.Session;
 import javax.mail.internet.InternetAddress;
 import java.io.ByteArrayInputStream;
@@ -57,6 +58,31 @@ public final class EmailMessageTest {
         assertEquals(EMAIL_SUBJECT, inbox.get(0).getSubject());
         assertEquals(HtmlProcessor.process(new StaticHtmlContentProvider(HTML)).getHtmlMessage(),
                 inbox.get(0).getContent());
+    }
+
+    @Test
+    public void testEmbeddingOfMessage() throws Exception {
+        Mailbox.clearAll();
+        EmailMessage message
+                = new EmailMessage.Builder(EMAIL_SENDER, EMAIL_SUBJECT,
+                new URLHtmlContentProvider(getClass().getResource("./EmbeddedImageTest.html")))
+                .addTo(EMAIL_RECIPIENT)
+                .build();
+        message.send(getMockSession());
+
+        List<Message> inbox = Mailbox.get(EMAIL_RECIPIENT);
+        assertTrue("Inbox size is actually: " + inbox.size(), inbox.size() == 1);
+        assertTrue("Meaasge was of type " + inbox.get(0).getContent().getClass().toString(),
+                inbox.get(0).getContent() instanceof Multipart);
+        Multipart multiPartMessage = (Multipart) inbox.get(0).getContent();
+        assertEquals(2, multiPartMessage.getCount());
+        assertTrue("Expected content to be text/html. Instead it was "
+                + multiPartMessage.getBodyPart(0).getContentType(),
+                multiPartMessage.getBodyPart(0).getContentType().contains("text/html"));
+        assertTrue("Expected content to be image/jpeg. Instead it was "
+                + multiPartMessage.getBodyPart(1).getContentType(),
+                multiPartMessage.getBodyPart(1).getContentType().contains("image/jpeg"));
+        assertTrue(multiPartMessage.getBodyPart(1).getHeader("Content-ID") != null);
     }
 
     @Test

@@ -1,6 +1,7 @@
 package com.github.jaystgelais.easymail;
 
 import java.net.MalformedURLException;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -46,7 +47,7 @@ public final class EmailMessageContent {
      *
      * @return The collection of images to be embedded in the HTML body.
      */
-    public Iterable<EmbeddedImageReference> getEmbeddedImages() {
+    public Collection<EmbeddedImageReference> getEmbeddedImages() {
         return imageMap.values();
     }
 
