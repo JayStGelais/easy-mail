@@ -1,6 +1,5 @@
 package com.github.jaystgelais.easymail;
 
-import com.google.common.base.Charsets;
 import com.google.common.io.CharStreams;
 
 import javax.activation.DataSource;
@@ -35,16 +34,6 @@ public final class StaticHtmlContentProvider implements HtmlContentProvider {
      */
     public StaticHtmlContentProvider(final InputStream inputStream, final Charset encoding) throws IOException {
         htmlContent = readStringFromInputStream(inputStream, encoding);
-    }
-
-    /**
-     * Creates a StaticHtmlContentProvider that will return the provided html String.
-     *
-     * @param inputStream InputStream providing input HTML.
-     * @throws IOException If an error occurs reading inputStream
-     */
-    public StaticHtmlContentProvider(final InputStream inputStream) throws IOException {
-        this(inputStream, Charsets.UTF_8);
     }
 
     private String readStringFromInputStream(final InputStream inputStream, final Charset encoding) throws IOException {

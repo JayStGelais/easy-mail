@@ -13,8 +13,6 @@ import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeBodyPart;
 import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimeMultipart;
-import java.io.IOException;
-import java.io.InputStream;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
@@ -186,26 +184,6 @@ public final class EmailMessage {
          */
         public Builder(final String from, final String subject,
                        final String htmlContent) throws HtmlTransformationException {
-            this(from, subject, new StaticHtmlContentProvider(htmlContent));
-        }
-
-
-
-        /**
-         * creates a new EmailMessage Builder.
-         *
-         * @param from email address for the sender of this message
-         * @param subject Email Subject
-         * @param htmlContent HTML content for message body
-         *
-         * @throws HtmlTransformationException If an error is encountered transforming Html content for inclusion in
-         *                                     this email.
-         * @throws java.io.IOException If an error occurs reading the HTML content form the supplied input stream.
-         * @throws IllegalArgumentException If the email address supplied for {@code from} is not a valid
-         *                                            email address.
-         */
-        public Builder(final String from, final String subject,
-                       final InputStream htmlContent) throws HtmlTransformationException, IOException {
             this(from, subject, new StaticHtmlContentProvider(htmlContent));
         }
 
