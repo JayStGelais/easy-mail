@@ -1,12 +1,7 @@
 package com.github.jaystgelais.easymail;
 
-import com.google.common.io.CharStreams;
-
 import javax.activation.DataSource;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.nio.charset.Charset;
+import java.net.URL;
 
 /**
  * Simple HtmlContentProvider implementation that will provide static HTML supplied from a String or Input Stream.
@@ -25,23 +20,6 @@ public final class StaticHtmlContentProvider implements HtmlContentProvider {
         htmlContent = html;
     }
 
-    /**
-     * Creates a StaticHtmlContentProvider that will return the provided html String.
-     *
-     * @param inputStream InputStream providing input HTML.
-     * @param encoding Sting encoding to use.
-     * @throws IOException If an error occurs reading inputStream
-     */
-    public StaticHtmlContentProvider(final InputStream inputStream, final Charset encoding) throws IOException {
-        htmlContent = readStringFromInputStream(inputStream, encoding);
-    }
-
-    private String readStringFromInputStream(final InputStream inputStream, final Charset encoding) throws IOException {
-        String content = CharStreams.toString(new InputStreamReader(inputStream, encoding));
-        inputStream.close();
-        return content;
-    }
-
     @Override
     public String getHtmlMessageContent() {
         return htmlContent;
@@ -51,5 +29,10 @@ public final class StaticHtmlContentProvider implements HtmlContentProvider {
     public DataSource getImageDataSource(final String relativeUrl) {
         throw new UnsupportedOperationException("StaticHtmlContentProvider does not support embedding images "
                 + "from relative URLs. All images myst be fully qualified URLs.");
+    }
+
+    @Override
+    public URL getBaseURL() {
+        return null;
     }
 }

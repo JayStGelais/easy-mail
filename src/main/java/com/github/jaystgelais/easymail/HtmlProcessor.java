@@ -54,7 +54,7 @@ public final class HtmlProcessor {
             docSource = newDocumentSource(contentProvider);
             Document doc = parseHtml(docSource);
 
-            applyEffectiveStylesToStyleAttributes(doc, docSource.getURL());
+            applyEffectiveStylesToStyleAttributes(doc, contentProvider.getBaseURL());
             removeStyleElements(doc);
             removeClassAttributes(doc);
             configureEmbeddedImages(doc, emailMessageContent);

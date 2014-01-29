@@ -1,0 +1,9 @@
+table#top-layout {
+    border-collapse:collapse;
+}
+table#top-layout,table#top-layout td {
+    border: 1px solid black;
+}
+td.section-title {
+    font-weight: bold;
+}

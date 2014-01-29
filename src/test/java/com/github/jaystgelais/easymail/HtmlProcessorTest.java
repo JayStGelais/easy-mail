@@ -4,6 +4,8 @@ import org.junit.Test;
 
 import javax.activation.DataSource;
 
+import java.net.URL;
+
 import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertTrue;
 import static junit.framework.Assert.fail;
@@ -75,6 +77,14 @@ public final class HtmlProcessorTest {
     }
 
     @Test
+    public void testLinkedCSSFiles() throws Exception {
+        HtmlContentProvider contentProvider = new URLHtmlContentProvider(getClass().getResource("./LinkedCSS.html"));
+        String htmlOutout = HtmlProcessor.process(contentProvider).getHtmlMessage();
+        HtmlAssert.assertElementHasStyle(htmlOutout, "bold-td", "font-weight: bold;");
+        HtmlAssert.assertElementDoesNotHaveStyle(htmlOutout, "non-bold-td", "font-weight: bold;");
+    }
+
+    @Test
     public void testExceptionHandling() {
         boolean hasHtmlTransformationExceptionBeenCaught = false;
         try {
@@ -86,6 +96,11 @@ public final class HtmlProcessorTest {
 
                 @Override
                 public DataSource getImageDataSource(final String relativeUrl) {
+                    return null;
+                }
+
+                @Override
+                public URL getBaseURL() {
                     return null;
                 }
             });

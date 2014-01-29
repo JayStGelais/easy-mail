@@ -2,6 +2,7 @@ package com.github.jaystgelais.easymail;
 
 import javax.activation.DataSource;
 import java.net.MalformedURLException;
+import java.net.URL;
 
 /**
  * Interface that provides access to source HTML content for input into transformation operations.
@@ -24,5 +25,12 @@ public interface HtmlContentProvider {
      * @throws MalformedURLException if the relative URL cannot be converted into a full URL to locate the resource.
      */
     DataSource getImageDataSource(String relativeUrl) throws MalformedURLException;
+
+    /**
+     * Returns a URL for determining the location of relative resources linked form HTML document.
+     *
+     * @return URL to use for loading relative resources or {@code null} if a URL is not available.
+     */
+    URL getBaseURL();
 
 }

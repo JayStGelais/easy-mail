@@ -52,6 +52,11 @@ public final class URLHtmlContentProvider implements HtmlContentProvider {
         return new URLDataSource(new URL(resource, relativeUrl));
     }
 
+    @Override
+    public URL getBaseURL() {
+        return resource;
+    }
+
     private String readStringFromInputStream(final InputStream inputStream, final Charset encoding) throws IOException {
         String content = CharStreams.toString(new InputStreamReader(inputStream, encoding));
         inputStream.close();
