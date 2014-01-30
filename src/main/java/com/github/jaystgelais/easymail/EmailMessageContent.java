@@ -6,7 +6,9 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Created by jaystgelais on 1/27/14.
+ * Provides access to transformed HTML content.
+ *
+ * @author jaystgelais
  */
 public final class EmailMessageContent {
 

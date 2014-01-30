@@ -13,7 +13,10 @@ import java.net.URL;
 import java.nio.charset.Charset;
 
 /**
- * Created by jaystgelais on 1/27/14.
+ * HtmlContentProvider implementation that fetches HTML from a given URL, such as a a fresource returned by
+ * {@code Class.getResource(String pathToResource)}.
+ *
+ * @author jaystgelais
  */
 public final class URLHtmlContentProvider implements HtmlContentProvider {
 
