@@ -35,9 +35,9 @@ public final class HtmlProcessor {
      *
      * Transformations include:
      * <ol>
-     *     <li>Calculate effective styles of all elements ad write them to their style attribute.</li>
-     *     <li>Remove style declarations form head of document.</li>
-     *     <li>Remove class attributes form all elements.</li>
+     *     <li>Calculate effective styles of all elements and write them to their style attribute.</li>
+     *     <li>Remove style declarations from head of document.</li>
+     *     <li>Remove class attributes from all elements.</li>
      *     <li>Configure Embedded image references for all images pointing to relative URLs.</li>
      * </ol>
      *
