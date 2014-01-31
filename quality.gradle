@@ -1,6 +1,10 @@
 apply plugin: 'jacoco'
 apply plugin: 'checkstyle'
 
+checkstyle {
+    sourceSets = [ sourceSets.main, sourceSets.test ]
+}
+
 task checkstyleReportMain << {
     if (file("$buildDir/reports/checkstyle/main.xml").exists()) {
         ant.xslt(in: "$buildDir/reports/checkstyle/main.xml",

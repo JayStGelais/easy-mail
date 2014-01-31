@@ -20,6 +20,10 @@ repositories {
 	jcenter()
 }
 
+sourceSets {
+    demo
+}
+
 dependencies {
     compile     group: 'com.google.guava',        name: 'guava',         version: '16.0'
     compile     group: 'net.sf.cssbox',           name: 'cssbox',        version: '4.4'
