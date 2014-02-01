@@ -10,6 +10,7 @@ buildscript {
 apply plugin: 'java'
 apply plugin: 'idea'
 apply from: file("quality.gradle")
+apply from: file("demo.gradle")
 apply plugin: 'maven-publish'
 
 sourceCompatibility = 1.6
@@ -18,10 +19,6 @@ group = 'com.github.jaystgelais'
 repositories {
     mavenCentral()
 	jcenter()
-}
-
-sourceSets {
-    demo
 }
 
 dependencies {

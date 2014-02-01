@@ -6,6 +6,7 @@ import java.io.StringWriter;
 import java.net.MalformedURLException;
 import java.net.URL;
 
+import org.fit.cssbox.css.CSSNorm;
 import org.fit.cssbox.css.DOMAnalyzer;
 import org.fit.cssbox.io.DOMSource;
 import org.fit.cssbox.io.DefaultDOMSource;
@@ -138,6 +139,8 @@ public final class HtmlProcessor {
     private static void applyEffectiveStylesToStyleAttributes(final Document doc, final URL relativeUrl) {
         DOMAnalyzer da = new DOMAnalyzer(doc, relativeUrl);
         da.attributesToStyles(); //convert the HTML presentation attributes to inline styles
+        da.addStyleSheet(null, CSSNorm.stdStyleSheet(), DOMAnalyzer.Origin.AGENT); //use the standard style sheet
+        da.addStyleSheet(null, CSSNorm.userStyleSheet(), DOMAnalyzer.Origin.AGENT); //use the additional style sheet
         da.getStyleSheets(); //load the author style sheets
         da.stylesToDomInherited();
     }

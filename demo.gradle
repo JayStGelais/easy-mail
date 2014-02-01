@@ -1,0 +1,19 @@
+apply plugin: 'java'
+
+sourceSets {
+    demo
+}
+
+dependencies {
+    demoCompile sourceSets.main.runtimeClasspath
+}
+
+
+def user = project.hasProperty("gmailUserName") ? gmailUserName : null
+def key = project.hasProperty("gmailPassword") ? gmailPassword : null
+
+task(demo, dependsOn: 'classes', type: JavaExec) {
+    main = 'com.github.jaystgelais.easymail.Demo'
+    classpath = sourceSets.demo.runtimeClasspath
+    args user, key
+}

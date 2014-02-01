@@ -11,7 +11,12 @@ import java.util.Properties;
  */
 public final class Demo {
     public static final void main(String[] args) {
-        Session mailSession = getSession(args[0], args[1]);
+        if (args.length != 2) {
+            throw new IllegalArgumentException("Usage: java com.github.jaystgelais.easymail.Demo gmailAddress gmailAppKey");
+        }
+        final String gmailAddress = args[0];
+        final String gmailAppKey = args[1];
+        Session mailSession = getSession(gmailAddress, gmailAppKey);
         HtmlContentProvider contentProvider = null;
         try {
             contentProvider = new URLHtmlContentProvider(Demo.class.getResource("/demo.html"));
@@ -19,16 +24,18 @@ public final class Demo {
             e.printStackTrace();
             return;
         }
+
         EmailMessage message = null;
         try {
-            message = new EmailMessage.Builder("JayStGelais@gmail.com",
+            message = new EmailMessage.Builder(gmailAddress,
                     "Hey check out easy-mail!", contentProvider)
-                    .addTo("jstg@commercehub.com")
+                    .addTo(gmailAddress)
                     .build();
         } catch (HtmlTransformationException e) {
             e.printStackTrace();
             return;
         }
+
         try {
             message.send(mailSession);
         } catch (MessagingException e) {

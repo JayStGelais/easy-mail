@@ -56,7 +56,7 @@ a {
   color: #2879d0;
 }
 
-header {
+td.header {
   padding-top: 40px;
   padding-bottom: 40px;
   font-family: 'Architects Daughter', 'Helvetica Neue', Helvetica, Arial, serif;
@@ -64,7 +64,7 @@ header {
   border-bottom: solid 1px #275da1;
 }
 
-header h1 {
+td.header h1 {
   letter-spacing: -1px;
   font-size: 72px;
   color: #fff;
@@ -73,7 +73,7 @@ header h1 {
   width: 540px;
 }
 
-header h2 {
+td.header h2 {
   font-size: 26px;
   color: #9ddcff;
   font-weight: normal;
