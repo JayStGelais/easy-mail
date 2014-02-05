@@ -36,7 +36,8 @@ public final class HtmlAssert {
 
     public static void assertElementHasStyle(final String html, final String elementId, final String style)
             throws IOException, SAXException, XPathExpressionException {
-        assertTrue(isStylePresentOnElement(html, elementId, style));
+        assertTrue("Style [" + style + "] missing on element [ID: " + elementId + "]\nhtml:\n" + html,
+                isStylePresentOnElement(html, elementId, style));
     }
 
     public static void assertElementDoesNotHaveStyle(final String html, final String elementId, final String style)
