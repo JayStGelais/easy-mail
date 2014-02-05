@@ -60,7 +60,7 @@ public final class HtmlProcessor {
             removeClassAttributes(doc);
             configureEmbeddedImages(doc, emailMessageContent);
 
-            emailMessageContent.setHtmlMessage(getHtmlAsString(doc));
+            emailMessageContent.setHtmlMessage(getHtmlBodyAsString(doc));
             return emailMessageContent;
         } catch (Exception e) {
             throw new HtmlTransformationException("Error occurred transforming HTML to use inline styles.", e);
@@ -115,14 +115,20 @@ public final class HtmlProcessor {
         }
     }
 
-    private static String getHtmlAsString(final Document doc) throws TransformerException {
-        javax.xml.transform.dom.DOMSource domSource = new javax.xml.transform.dom.DOMSource(doc);
+    private static String getHtmlBodyAsString(final Document doc) throws TransformerException {
         StringWriter writer = new StringWriter();
         StreamResult result = new StreamResult(writer);
+
+        Node body = doc.getElementsByTagName("body").item(0);
+        doc.renameNode(body, "", "div");
+
+        javax.xml.transform.dom.DOMSource domSource = new javax.xml.transform.dom.DOMSource(body);
         TransformerFactory tf = TransformerFactory.newInstance();
         Transformer transformer = tf.newTransformer();
         transformer.transform(domSource, result);
-        return writer.toString();
+
+        final String content = writer.toString();
+        return content.substring(content.indexOf("<div"));
     }
 
     private static StreamDocumentSource newDocumentSource(final HtmlContentProvider contentProvider)
