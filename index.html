@@ -33,21 +33,21 @@
 
 <p><a href="https://travis-ci.org/JayStGelais/easy-mail"><img src="https://travis-ci.org/JayStGelais/easy-mail.png?branch=master" alt="Build Status"></a></p>
 
-<p>The <strong>easy-mail</strong> API provides a simple wrapper around the JavaMail APi and utilities for transforming HTML with CSS to
-provide greater cross client support for html email message rendering.</p>
+<p>The <strong>easy-mail</strong> API provides a simple wrapper around the JavaMail API and utilities for transforming HTML with CSS to
+provide greater cross-client support for HTML email message rendering.</p>
 
 <p><strong>easy-mail</strong> accepts HTML input and performs the following transformations on it before using it for the mail message
 body.</p>
 
 <ol>
-<li>Calculate effective styles of all elements ad write them to their style attribute.</li>
-<li>Remove style declarations form head of document.</li>
-<li>Remove class attributes form all elements.</li>
-<li>Embed all images referneces from the HTML document as relative URLs. <em>(Fully qualified URLS will continue to
-link to their remote image resource)</em>
+<li>Calculates effective styles of all elements and writes them to their style attribute.</li>
+<li>Removes style declarations from the head of the document.</li>
+<li>Removes class attributes from all elements.</li>
+<li>Embeds all images referneces from the HTML document as relative URLs. <em>(Fully qualified URLs will continue to
+link to their remote image resources)</em>
 </li>
 </ol><p>For tips on writing effective HTML input for <strong>easy-mail</strong> please refer to this wiki page:
-<a href="https://github.com/JayStGelais/easy-mail/wiki/Tips-for-Writing-HTML-Templates-for-Input-to-easy-mail">Tips for Writing HTML Templates for Input to easy mail</a></p>
+<a href="https://github.com/JayStGelais/easy-mail/wiki/Tips-for-Writing-HTML-Templates-for-Input-to-easy-mail">Tips for Writing HTML Templates for Input to easy-mail</a></p>
 
 <h1>
 <a name="getting-easy-mail" class="anchor" href="#getting-easy-mail"><span class="octicon octicon-link"></span></a>Getting easy-mail</h1>
@@ -98,7 +98,7 @@ message.send(mailSession);
 <a name="extending-easy-mail" class="anchor" href="#extending-easy-mail"><span class="octicon octicon-link"></span></a>Extending easy-mail</h1>
 
 <p>The main extension point for <strong>easy-mail</strong> is the <em>HtmlContetProvider</em> interface. Implementing this interface
-is you entry point to provided HTML content form your favorite HTML template framework.</p>
+is your entry point to provide HTML content from your favorite HTML template framework.</p>
 
 <h1>
 <a name="easy-mail-versions" class="anchor" href="#easy-mail-versions"><span class="octicon octicon-link"></span></a>easy-mail Versions</h1>
