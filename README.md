@@ -8,7 +8,7 @@ provide greater cross client support for html email message rendering.
 **easy-mail** accepts HTML input and performs the following transformations on it before using it for the mail message
 body.
 
-1. Calculate effective styles of all elements ad write them to their style attribute.
+1. Calculate effective styles of all elements and write them to their style attribute.
 2. Remove style declarations form head of document.
 3. Remove class attributes form all elements.
 4. Embed all images referneces from the HTML document as relative URLs. *(Fully qualified URLS will continue to
